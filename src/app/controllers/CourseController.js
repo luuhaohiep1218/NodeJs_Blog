@@ -13,6 +13,18 @@ class CourseController {
       })
       .catch(next);
   }
+  // [GET] /courses/create
+  create(req, res, next) {
+    res.render("courses/create");
+  }
+  // [POST] /courses/store
+  async store(req, res, next) {
+    const course = new Course(req.body);
+    await course
+      .save()
+      .then(() => res.redirect("/"))
+      .catch((error) => {});
+  }
 }
 
 module.exports = new CourseController();

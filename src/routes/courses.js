@@ -1,10 +1,11 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
-const courseController = require('../app/controllers/CourseController');
+const courseController = require("../app/controllers/CourseController");
 
-// newsController.index
-
-router.get('/:slug', courseController.show);
+// courseController.index
+router.get("/create", courseController.create);
+router.post("/store", courseController.store);
+router.get("/:slug", courseController.show);
 
 module.exports = router;
