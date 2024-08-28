@@ -22,13 +22,24 @@
     "url": "https://github.com/luuhaohiep1218/NodeJs_Blog/issues"
   },
   "homepage": "https://github.com/luuhaohiep1218/NodeJs_Blog#readme",
+  "lint-staged": {
+    "src/**/*.{js,json,scss}": "prettier --single-quote --trailing-comma all --tab-width 4 --write"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "dependencies": {
     "express": "^4.19.2",
     "express-handlebars": "^8.0.1"
   },
   "devDependencies": {
+    "husky": "^9.1.5",
+    "lint-staged": "^15.2.9",
     "morgan": "^1.10.0",
     "nodemon": "^3.1.4",
+    "prettier": "^3.3.3",
     "sass": "^1.77.8"
   }
 }
