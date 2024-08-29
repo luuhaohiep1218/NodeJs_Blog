@@ -1,6 +1,3 @@
-const Course = require("../models/Course");
-
-
 <div class="mt-4">
     <h3>Khoá học của tôi</h3>
     <table class="table table-striped table-hover">
@@ -22,7 +19,8 @@ const Course = require("../models/Course");
                 <td>
                     <div class="d-flex">
                         <a href="/courses/{{this._id}}/edit" class="btn btn-primary">Sửa</a>
-                        <a href="" class="btn btn-danger">Xoá</a>
+                        <a href="" class="btn btn-danger" data-id="{{this._id}}" class="btn btn-danger"
+                            data-bs-toggle="modal" data-bs-target="#delete-course">Xoá</a>
                     </div>
 
                 </td>
@@ -32,3 +30,51 @@ const Course = require("../models/Course");
         </tbody>
     </table>
 </div>
+<!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="delete-course" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteModalLabel">Xoá khoá học này?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Bạn chắc chắn muốn xoá khoá học này
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="btn-delete-course" type="button" class="btn btn-danger">Xoá bỏ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{!-- Delete form hidden --}}
+
+<form name="delete-form" method="post"></form>
+
+
+<script>
+    var courseId;
+    var btnDeleteCourse = document.getElementById('btn-delete-course');
+    var deleteForm = document.forms["delete-form"];
+    const deleteModal = document.getElementById('delete-course');
+
+
+    if (deleteModal) {
+        deleteModal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget
+            courseId = button.getAttribute('data-id');
+        })
+    }
+
+    btnDeleteCourse.onclick = function () {
+        deleteForm.action = "/courses/" + courseId + "?_method=DELETE";
+        deleteForm.submit();
+    }
+
+
+</script>
