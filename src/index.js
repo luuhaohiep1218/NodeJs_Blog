@@ -24,6 +24,18 @@ app.use(express.json());
 
 app.use(methodOverride("_method"));
 
+app.use(bacBaoVe);
+
+function bacBaoVe(req, res, next) {
+  if (["vethuong", "vevip"].includes(req.query.ve)) {
+    req.face = "to son len mat";
+    return next();
+  }
+  res.status(403).json({
+    message: "Bạn phải chọn vé thường hoặc vé vip",
+  });
+}
+
 // HTTP logger
 app.use(morgan("combined"));
 
@@ -35,7 +47,7 @@ app.engine(
     helpers: {
       sum: (a, b) => a + b,
     },
-  }),
+  })
 );
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "resources", "views"));
