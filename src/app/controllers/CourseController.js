@@ -18,11 +18,11 @@ class CourseController {
     res.render("courses/create");
   }
   // [POST] /courses/store
-  async store(req, res, next) {
+  store(req, res, next) {
     const course = new Course(req.body);
-    await course
+    course
       .save()
-      .then(() => res.redirect("/"))
+      .then(() => res.redirect("/me/stored/courses"))
       .catch((error) => {});
   }
 
@@ -46,9 +46,35 @@ class CourseController {
 
   // [DELETE] /courses/:id
   delete(req, res, next) {
+    Course.delete({ _id: req.params.id })
+      .then(() => res.redirect("back"))
+      .catch(next);
+  }
+
+  // [DELETE] /courses/:id/force
+  force(req, res, next) {
     Course.deleteOne({ _id: req.params.id })
       .then(() => res.redirect("back"))
       .catch(next);
+  }
+  // [PATCH] /courses/:id/restore
+  restore(req, res, next) {
+    Course.restore({ _id: req.params.id })
+      .then(() => res.redirect("back"))
+      .catch(next);
+  }
+  // [POST] /courses/handle-form-actions
+  handleFormActions(req, res, next) {
+    switch (req.body.action) {
+      case "delete":
+        Course.delete({ _id: { $in: req.body.courseIds } })
+          .then(() => res.redirect("back"))
+          .catch(next);
+        break;
+      default:
+        res.json({ message: "Action is invalid!" });
+        break;
+    }
   }
 }
 
