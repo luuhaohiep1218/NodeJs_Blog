@@ -7,6 +7,8 @@ const { engine } = handlebars;
 const app = express();
 const port = 3000;
 
+const SortMiddleware = require("./app/middlewares/SortMiddlewares");
+
 const route = require("./routes");
 const db = require("./config/db");
 
@@ -24,17 +26,7 @@ app.use(express.json());
 
 app.use(methodOverride("_method"));
 
-app.use(bacBaoVe);
-
-function bacBaoVe(req, res, next) {
-  if (["vethuong", "vevip"].includes(req.query.ve)) {
-    req.face = "to son len mat";
-    return next();
-  }
-  res.status(403).json({
-    message: "Bạn phải chọn vé thường hoặc vé vip",
-  });
-}
+app.use(SortMiddleware);
 
 // HTTP logger
 app.use(morgan("combined"));
@@ -46,6 +38,29 @@ app.engine(
     extname: ".hbs",
     helpers: {
       sum: (a, b) => a + b,
+      sortable: (field, sort) => {
+        const sortType = field === sort.column ? sort.type : "default";
+        const icons = {
+          default: "fa-solid fa-sort",
+          asc: "fa-solid fa-arrow-up-wide-short",
+          desc: "fa-solid fa-arrow-up-short-wide",
+        };
+
+        const types = {
+          default: "desc",
+          desc: "asc",
+          asc: "desc",
+        };
+
+        const icon = icons[sortType];
+        const type = types[sortType];
+
+        return `
+        <a href="?_sort&column=${field}&type=${type}">
+          <i class="${icon}"></i>
+        </a>
+        `;
+      },
     },
   })
 );
